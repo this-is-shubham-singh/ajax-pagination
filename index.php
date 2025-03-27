@@ -34,6 +34,23 @@
         th {
             background-color: #333;
         }
+
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .pagination a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 
@@ -46,22 +63,54 @@
                 <th>Last Name</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>John</td>
-                <td>Doe</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Jane</td>
-                <td>Smith</td>
-            </tr>
+        <tbody id="user_data">
         </tbody>
     </table>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div class="pagination" id="pagination">
+        <!-- <a href=""></a>
+        <a href=""></a>
+        <a href=""></a> -->
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function load_table(page) {
+                $.ajax({
+                    url: "get_userdata.php",
+                    method: "POST",
+                    data: {
+                        pageNo: page
+                    },
+                    success: function(data) {
+                        $("#user_data").html(data);
+                    }
+                })
+            }
+
+            load_table();
+
+
+            function load_pagination() {
+                $.ajax({
+                    url: "get_pagination.php",
+                    method: "POST",
+                    success: function(data) {
+                        $("#pagination").html(data);
+                    }
+                })
+            }
+
+            load_pagination();
+
+            $(document).on("click", ".page_no", function() {
+                $id = $(this).attr("id");
+
+                load_table($id);
+            })
+        });
+    </script>
 </body>
 
 </html>
